@@ -8,7 +8,7 @@ def create_board_surf():
     dark = False
     for y in range(8):
         for x in range(8):
-            rect = pygame.Rect(x*TILESIZE, y*TILESIZE, TILESIZE, TILESIZE)
+            rect = pygame.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE)
             pygame.draw.rect(board_surf, pygame.Color('darkgrey' if dark else 'beige'), rect)
             dark = not dark
         dark = not dark

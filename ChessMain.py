@@ -1,5 +1,7 @@
 import pygame as p
 import ChessEngine
+from tkinter import *
+from tkinter import messagebox
 
 WIDTH = HEIGHT = 512
 DIMENSION = 8
@@ -14,7 +16,7 @@ def loadImages():
 
 def highlightSquares(screen, gs, validMoves, sqSelected):
     if sqSelected != ():
-        r, c = sqSelected
+        r, c, piece = sqSelected
         if gs.board[r][c][0] == ("w" if gs.whiteToMove else "b"):
             s = p.Surface((SQ_SIZE, SQ_SIZE))
             s.set_alpha(100)
@@ -31,7 +33,7 @@ Responsible for all the graphics within a current game state
 def drawGameState(screen, gs, validMoves, sqSelected, rect):
     drawBoard(screen)
     highlightSquares(screen, gs, validMoves, sqSelected)
-    drawPieces(screen, gs.board, rect, sqSelected)
+    drawPieces(screen, gs.board, rect, sqSelected) 
     
 def drawBoard(screen):
     colours = [p.Color("white"), p.Color("gray")]
@@ -56,7 +58,7 @@ def drawPieces(screen, board, rect, squareSelected):
             if piece != "--":
                 selected = row == sx and col == sy
                 pos = p.Vector2(p.mouse.get_pos())
-                screen.blit()
+                screen.blit(IMAGES[piece], p.Rect(col * SQ_SIZE, row * SQ_SIZE, SQ_SIZE, SQ_SIZE))
                 
 
 def getSquareUnderMouse(board):
@@ -99,7 +101,7 @@ def main():
                     playerClicks = []
                 else:
                     #deselect and clear player clicks
-                    sqSelected = (row, col)
+                    sqSelected = (row, col, piece)
                     playerClicks.append(sqSelected)
                     if rect.collidepoint(event.pos):
                         moving = True
@@ -166,6 +168,14 @@ def main():
             
         clock.tick(MAX_FPS)
         p.display.flip()
+        if validMoves == []:
+            running = False
+            Tk().wm_withdraw() #to hide the main window
+            if str(move.pieceMoved[0]) == "w":
+                winner = "White"
+            else:
+                winner = "Black"
+            messagebox.showinfo('Checkmate', winner + " wins!")
             
 if __name__ == "__main__":   
     main()
